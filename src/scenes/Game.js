@@ -21,7 +21,7 @@ export default class Game extends Phaser.Scene{
         //use this
         //remove this
         //this.physics.add.image(240,320,'platform').setScale(0.5);
-
+        
         const platforms = this.physics.add.staticGroup();
         for(let i = 0; i < 5; ++i){
             const x = Phaser.Math.Between(80,400);
@@ -33,6 +33,9 @@ export default class Game extends Phaser.Scene{
         }
          this.player = this.physics.add.sprite(240,320,'bunny-stand').setScale(0.5);
         this.physics.add.collider(platforms, this.player);
+        this.player.body.checkCollision.left = false;
+        this.player.body.checkCollision.right = false;
+        this.player.body.checkCollision.up = false;
     }
     update(){
 
