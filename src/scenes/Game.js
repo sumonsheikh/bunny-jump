@@ -4,7 +4,12 @@ import Phaser  from "../lib/phaser.js";
 export default class Game extends Phaser.Scene{
     /** @type {Phaser.Physics.Arcade.Sprite} */
     platforms
+
+    /** @type {Phaser.Physics.Arcade.Sprite} */
     player
+
+    /** @type {Phaser.Types.Input.Keyboard.CursorKeys} */
+    cursore
     constructor(){
         
         
@@ -14,7 +19,7 @@ export default class Game extends Phaser.Scene{
         this.load.image('background','assets/bg_layer1.png');
         this.load.image('platform','assets/ground_grass.png');
         this.load.image('bunny-stand', 'assets/bunny1_stand.png')
-
+        this.cursore = this.input.keyboard.createCursorKeys();
     }
 
     create(){
@@ -41,12 +46,19 @@ export default class Game extends Phaser.Scene{
         this.player.body.checkCollision.up = false;
         this.cameras.main.startFollow(this.player);
     }
-    update(){
+    update(t, dt){
 
         const touchingDown = this.player.body.touching.down;
 
         if(touchingDown){
             this.player.setVelocityY(-300);
+        }
+        if(this.cursore.left.isDown && !touchingDown){
+            this.player.setVelocityX(-200);
+        }else if(this.cursore.right.isDown && !touchingDown){
+            this.player.setVelocityX(200);
+        }else{
+            this.player.setVelocityX(0);
         }
         this.platforms.children.iterate(child =>{
             const platform = child;
