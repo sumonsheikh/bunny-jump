@@ -1,6 +1,6 @@
 
 import Phaser  from "../lib/phaser.js";
-
+import Carrot  from "../game/Carrot.js";
 export default class Game extends Phaser.Scene{
     /** @type {Phaser.Physics.Arcade.Sprite} */
     platforms
@@ -20,6 +20,8 @@ export default class Game extends Phaser.Scene{
         this.load.image('platform','assets/ground_grass.png');
         this.load.image('bunny-stand', 'assets/bunny1_stand.png')
         this.cursore = this.input.keyboard.createCursorKeys();
+
+        this.load.image('carrot','assets/carrot.png');
     }
 
     create(){
@@ -45,6 +47,12 @@ export default class Game extends Phaser.Scene{
         this.player.body.checkCollision.right = false;
         this.player.body.checkCollision.up = false;
         this.cameras.main.startFollow(this.player);
+        //set dead zone horizontaly 
+        this.cameras.main.setDeadzone(this.scale.width * 1.5);
+
+        //create carrot class
+        const carrot = new Carrot(this, 240, 320,'carrot');
+        this.add.existing(carrot);
     }
     update(t, dt){
 
@@ -73,5 +81,16 @@ export default class Game extends Phaser.Scene{
                 platform.body.updateFromGameObject();
             }
         })
+        this.horizontalWrap(this.player)
+        
+    }
+    horizontalWrap(sprite){
+        const halfWidth = sprite.displayWidth * 0.5;
+        const gameWidth = this.scale.width;
+        if(sprite.x < -halfWidth){
+            sprite.x = gameWidth + halfWidth;
+        }else if(sprite.x > gameWidth + halfWidth){
+            sprite.x = -halfWidth;
+        }
     }
 }
